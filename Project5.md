@@ -37,3 +37,16 @@ Replace ‘127.0.0.1’ to ‘0.0.0.0’ like this:
 
 ![Configuration of MySQL server to allow connections from remote hosts](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/5712c03b-8d9c-456c-9c49-fee9ee85f62e)
 
+set up a user, create a database and grant all privileges to the user created on mysql server
+
+![mysql user and database setup](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/fed0aa83-9faa-42d4-a8aa-65c0ae2f8139)
+
+From mysql client Linux Server connect remotely to mysql server Database Engine without using SSH. You must use the mysql utility to perform this action.
+
+Check that you have successfully connected to a remote MySQL server and can perform SQL queries:
+
+`Show databases;`
+
+If you see an output similar to the below image, then you have successfully completed this project – you have deloyed a fully functional MySQL Client-Server set up.
+
+![fully functional MySQL Client-Server set up](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/f3765c3b-58d9-4fa8-a865-0d955ef1f581)
