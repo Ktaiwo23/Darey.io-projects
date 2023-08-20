@@ -203,14 +203,11 @@ To make this change permanent – open following config file `sudo vi /etc/sysco
 
 Update the website’s configuration to connect to the database (in /var/www/html/functions.php file).
 
-
-
 Apply tooling-db.sql script to your database using this command mysql -h <databse-private-ip> -u <db-username> -p <db-pasword> < tooling-db.sql
 
-![apply tooling script to database using command mysql -h -u](https://github.com/Sakirat/Project_Based_Learning/assets/110112922/4116a0b1-988b-4737-9ba2-4a76b5126785)
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/54b9582c-2f1c-4a0e-b71b-d49d0c943cdf)
 
-![confirming the content of the html repo is same as in var www html](https://github.com/Sakirat/Project_Based_Learning/assets/110112922/5abdf554-9739-4091-ba4a-d2386b1d7ec2)
-
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/4b5a692b-e649-4fed-9bee-95166e6eafd0)
 
 
 Create in MySQL a new admin user with username: myuser and password: password:
