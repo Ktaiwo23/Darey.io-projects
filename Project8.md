@@ -48,7 +48,8 @@ Make sure that you have following servers installed and configured as done in Pr
 1. Create an Ubuntu Server 20.04 EC2 instance and name it Project-8-apache-lb, so your EC2 list will look like this:
 
 2. Open TCP port 80 on Project-8-apache-lb by creating an Inbound Rule in Security Group.
-
+   ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/19ce1f39-a023-4a10-bba3-c88355681698)
+   
 3. Install Apache Load Balancer on Project-8-apache-lb server and configure it to point traffic coming to LB to both Web Servers:
 
 #### Install apache2
@@ -78,6 +79,8 @@ Make sure that you have following servers installed and configured as done in Pr
 
 `sudo systemctl status apache2`
 
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/dfee749a-8c73-48a8-b403-dfad935a3935)
+
 #### Configure load balancing
 
 `sudo vi /etc/apache2/sites-available/000-default.conf`
@@ -99,11 +102,16 @@ Make sure that you have following servers installed and configured as done in Pr
 
 `sudo systemctl restart apache2`
 
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/ab547fdd-d62c-42ab-a618-ad8aab39fab7)
+
 bytraffic balancing method will distribute incoming load between your Web Servers according to current traffic load. We can control in which proportion the traffic must be distributed by loadfactor parameter.
 
 4. Verify that our configuration works – try to access your LB’s public IP address or Public DNS name from your browser:
 
 `http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php`
+
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/a70d52cc-059f-4d02-b4ae-ba4e877d6466)
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/fb1ab0cb-9475-4ab6-986e-cc2508f94415)
 
 Open two ssh/Putty consoles for both Web Servers and run following command:
 
@@ -111,12 +119,37 @@ Open two ssh/Putty consoles for both Web Servers and run following command:
 
 Try to refresh your browser page http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php several times and make sure that both servers receive HTTP GET requests from your LB – new records must appear in each server’s log file. The number of requests to each server will be approximately the same since we set loadfactor to the same value for both servers – it means that traffic will be disctributed evenly between them.
 
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/a70d52cc-059f-4d02-b4ae-ba4e877d6466)
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/fb1ab0cb-9475-4ab6-986e-cc2508f94415)
+
 If you have configured everything correctly – your users will not even notice that their requests are served by more than one server.
 
+Optional Step – Configure Local DNS Names Resolution
+Sometimes it is tedious to remember and switch between IP addresses, especially if you have a lot of servers under your management.
+What we can do, is to configure local domain name resolution. The easiest way is to use /etc/hosts file, although this approach is not very scalable, but it is very easy to configure and shows the concept well. So let us configure IP address to domain name mapping for our LB.
 
+      #Open this file on your LB server
 
+      sudo vi /etc/hosts
 
+      #Add 2 records into this file with Local IP address and arbitrary name for both of your Web Servers
 
+        <WebServer1-Private-IP-Address> Wbs1
+        <WebServer2-Private-IP-Address> Wbs2
+Now you can update your LB config file with those names instead of IP addresses.
+
+        BalancerMember http://Wbs1:80 loadfactor=5 timeout=1
+        BalancerMember http://Wbs2:80 loadfactor=5 timeout=1
+You can try to curl your Web Servers from LB locally `curl http://Wbs1` or `curl http://Wbs2` – it shall work.
+
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/0bb27321-26f4-4ddd-804a-eda192d0cd8d)
+
+Remember, this is only internal configuration and it is also local to your LB server, these names will neither be ‘resolvable’ from other servers internally nor from the Internet.
+
+###Targeted Architecture
+Now our set up looks like this:
+
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/27ef9269-bcb5-4762-b57d-336719b9febd)
 
 
 
