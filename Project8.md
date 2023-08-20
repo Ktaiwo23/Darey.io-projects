@@ -6,12 +6,12 @@ When we access a website in the Internet we use an URL and we do not really know
 
 Each URL contains a domain name part, which is translated (resolved) to IP address of a target server that will serve requests when open a website in the Internet. Translation (resolution) of domain names is perormed by DNS servers, the most commonly used one has a public IP address 8.8.8.8 and belongs to Google. You can try to query it with nslookup command:
 
-  `nslookup 8.8.8.8`
-  `Server:  UnKnown`
-  `Address:  103.86.99.99`
+      `nslookup 8.8.8.8`
+      `Server:  UnKnown`
+      `Address:  103.86.99.99`
 
-  `Name:    dns.google`
-  `Address:  8.8.8.8`
+      `Name:    dns.google`
+      `Address:  8.8.8.8`
 
 When you have just one Web server and load increases – you want to serve more and more customers, you can add more CPU and RAM or completely replace the server with a more powerful one – this is called “vertical scaling”. This approach has limitations – at some point you reach the maximum capacity of CPU and RAM that can be installed into your server.
 
@@ -52,28 +52,21 @@ Make sure that you have following servers installed and configured as done in Pr
    
 3. Install Apache Load Balancer on Project-8-apache-lb server and configure it to point traffic coming to LB to both Web Servers:
 
-#### Install apache2
-`sudo apt update`
+        #Install apache2
+        `sudo apt update`
+        `sudo apt install apache2 -y`
+        `sudo apt-get install libxml2-dev`
 
-`sudo apt install apache2 -y`
+        #Enable following modules:
+        `sudo a2enmod rewrite`
+        `sudo a2enmod proxy`
+        `sudo a2enmod proxy_balancer`
+        `sudo a2enmod proxy_http`
+        `sudo a2enmod headers`
+        `sudo a2enmod lbmethod_bytraffic`
 
-`sudo apt-get install libxml2-dev`
-
-#### Enable following modules:
-`sudo a2enmod rewrite`
-
-`sudo a2enmod proxy`
-
-`sudo a2enmod proxy_balancer`
-
-`sudo a2enmod proxy_http`
-
-`sudo a2enmod headers`
-
-`sudo a2enmod lbmethod_bytraffic`
-
-#### Restart apache2 service
-`sudo systemctl restart apache2`
+        #Restart apache2 service
+        `sudo systemctl restart apache2`
 
 #### Make sure apache2 is up and running
 
@@ -113,19 +106,22 @@ bytraffic balancing method will distribute incoming load between your Web Server
 ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/a70d52cc-059f-4d02-b4ae-ba4e877d6466)
 ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/fb1ab0cb-9475-4ab6-986e-cc2508f94415)
 
+Note: If in the Project-7 you mounted /var/log/httpd/ from your Web Servers to the NFS server – unmount them and make sure that each Web Server has its own log directory.
+
 Open two ssh/Putty consoles for both Web Servers and run following command:
 
 `sudo tail -f /var/log/httpd/access_log`
 
-Try to refresh your browser page http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php several times and make sure that both servers receive HTTP GET requests from your LB – new records must appear in each server’s log file. The number of requests to each server will be approximately the same since we set loadfactor to the same value for both servers – it means that traffic will be disctributed evenly between them.
+Try to refresh your browser page `http://<Load-Balancer-Public-IP-Address-or-Public-DNS-Name>/index.php` several times and make sure that both servers receive HTTP GET requests from your LB – new records must appear in each server’s log file. The number of requests to each server will be approximately the same since we set loadfactor to the same value for both servers – it means that traffic will be disctributed evenly between them.
 
 ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/a70d52cc-059f-4d02-b4ae-ba4e877d6466)
 ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/fb1ab0cb-9475-4ab6-986e-cc2508f94415)
 
 If you have configured everything correctly – your users will not even notice that their requests are served by more than one server.
 
-Optional Step – Configure Local DNS Names Resolution
+### Optional Step – Configure Local DNS Names Resolution
 Sometimes it is tedious to remember and switch between IP addresses, especially if you have a lot of servers under your management.
+
 What we can do, is to configure local domain name resolution. The easiest way is to use /etc/hosts file, although this approach is not very scalable, but it is very easy to configure and shows the concept well. So let us configure IP address to domain name mapping for our LB.
 
       #Open this file on your LB server
@@ -146,7 +142,7 @@ You can try to curl your Web Servers from LB locally `curl http://Wbs1` or `curl
 
 Remember, this is only internal configuration and it is also local to your LB server, these names will neither be ‘resolvable’ from other servers internally nor from the Internet.
 
-###Targeted Architecture
+### Targeted Architecture
 Now our set up looks like this:
 
 ![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/27ef9269-bcb5-4762-b57d-336719b9febd)
