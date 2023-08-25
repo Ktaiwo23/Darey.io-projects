@@ -31,6 +31,8 @@ Our target architecture will look like this:
 You can either uninstall Apache from the existing Load Balancer server, or create a fresh installation of Linux for Nginx.
 
 1. Create an EC2 VM based on Ubuntu Server 20.04 LTS and name it Nginx LB (do not forget to open TCP port 80 for HTTP connections, also open TCP port 443 – this port is used for secured HTTPS connections)
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/ee60a57c-2104-4da8-af34-acd8d8cc01e2)
+
 2. Update /etc/hosts file for local DNS with Web Servers’ names (e.g. Web1 and Web2) and their local IP addresses
 3. Install and configure Nginx as a load balancer to point traffic to the resolvable DNS names of the webservers
 
@@ -65,6 +67,13 @@ Open the default nginx configuration file
         #comment out this line
         #include /etc/nginx/sites-enabled/*;
 
+Restart Nginx and make sure the service is up and running
+
+        sudo systemctl restart nginx
+        sudo systemctl status nginx
+
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/24d8e720-c78c-48b3-92be-2b29f14f2927)
+
 ## REGISTER A NEW DOMAIN NAME AND CONFIGURE SECURED CONNECTION USING SSL/TLS CERTIFICATES
 
 Let us make necessary configurations to make connections to our Tooling Web Solution secured!
@@ -72,6 +81,8 @@ Let us make necessary configurations to make connections to our Tooling Web Solu
 In order to get a valid SSL certificate – you need to register a new domain name, you can do it using any Domain name registrar – a company that manages reservation of domain names. The most popular ones are: Godaddy.com, Domain.com, Bluehost.com.
 
 1. Register a new domain name with any registrar of your choice in any domain zone (e.g. _.com, .net, .org, .edu, .info, .xyz_ or any other)
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/c1cf245a-aee1-4c10-9f9b-0b53d9cd3b1d)
+
 2. Assign an Elastic IP to your Nginx LB server and associate your domain name with this Elastic IP.
 You might have noticed, that every time you restart or stop/start your EC2 instance – you get a new public IP address. When you want to associate your domain name – it is better to have a static IP address that does not change after reboot. Elastic IP is the solution for this problem, learn how to allocate an Elastic IP and associate it with an EC2 server on https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html.
 
@@ -84,6 +95,9 @@ Check that your Web Servers can be reached from your browser using new domain na
 Update your _nginx.conf_ with _server_name www.<your-domain-name.com>_ instead of _server_name www.domain.com_
 
 5. Install certbot and request for an SSL/TLS certificate
+
+![image](https://github.com/Ktaiwo23/Darey.io-projects/assets/134460769/89ade17a-20ae-47d1-a196-89a75883c38a)
+
 Make sure snapd service is active and running
 
 `sudo systemctl status snapd`
